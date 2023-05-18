@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>socket client</title>
+</head>
+
+<body>
+    <div class="messages-container"></div>
+    <div class="send">
+        <h1>send</h1>
+        <form action="#" id="send-container">
+            <input type="text" name="to" id="to" />
+            <input type="text" name="messageInp" id="messageInp" />
+            <button class="btn" type="submit">Send</button>
+        </form>
+        <h1>req</h1>
+        <form action="#" id="req-container">
+            <input type="text" name="from" id="from" />
+            <button class="btn" type="submit">request</button>
+        </form>
+    </div>
+    <script  src='http://localhost:1112/socket.io/socket.io.js'></script>
+    <script >
+        const socket = io('http://localhost:1112')
+
+        const form1 = document.getElementById('send-container')
+        const form2 = document.getElementById('req-container')
+        const toInput = document.getElementById('to')
+        const fromInput = document.getElementById('from')
+        const msgInput = document.getElementById('messageInp')
+        const msgContainer = document.querySelector('.messages-container')
+
+        const append = (message, position) => {
+            const messageElement = document.createElement('div')
+            messageElement.innerText = message
+            messageElement.classList.add('message')
+            messageElement.classList.add(position)
+            msgContainer.append(messageElement)
+        }
+
+        const username = prompt("Enter your name to join");
+        socket.emit('new-user-joined', username);
+
+        socket.on('user-joined', obj => {
+            append(`${obj.name} joined the chat`, 'right')
+        })
+
+        socket.on('recieve-msg', data => {
+            append(`${data.from.name}: ${data.message}`, 'left')
+        })
+
+        socket.on('recieved-data', data => {
+            for (let index = 0; index < data.history.length; index++) {
+                const msg = data.history[index];
+                append(`${data.from}: ${msg.message} (${new Date(msg.date)})`, 'left')
+            }
+            socket.emit('success', data.history[0].from || "")
+        })
+
+        socket.on('user-left', obj => {
+            append(`${obj.name} left the chat`, 'right')
+        })
+
+        form1.addEventListener("submit", (e) => {
+            e.preventDefault()
+            const to = toInput.value
+            const msg = msgInput.value
+            append(`you: ${msg}`, 'right')
+            socket.emit('send-msg', {message: msg, to: to})
+            msgInput.value = ''
+            toInput.value = ''
+        })
+
+        form2.addEventListener("submit", (e) => {
+            e.preventDefault()
+            const from = fromInput.value
+            socket.emit('request-data', from)
+            fromInput.value = ''
+        })
+    </script>
+    
+</body>
+
+</html>

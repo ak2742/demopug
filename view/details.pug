@@ -1,0 +1,10 @@
+extends base.pug
+
+block div.content
+        div.content
+            div.section.flex.detailsDiv
+                button( onclick="goHome()" class="btn") Home
+                div.postDetails.flex
+                        img( src="/static/images/img.jpg" alt="Image could not be loaded")
+                        h1 #{postTitle}
+                        span #{postDescription}
