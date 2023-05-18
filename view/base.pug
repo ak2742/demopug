@@ -1,0 +1,68 @@
+doctype html
+html( lang="en" dir="ltr")
+
+    head
+        meta( charset="UTF-8")
+        meta( name="viewport" content="width=device-width, initial-scale=1.0")
+        title #{title} | demosite
+        link(rel="icon", href="/static/images/favicon.ico", type="image/x-icon")
+        link(rel="shortcut icon", href="/static/images/favicon.ico", type="image/x-icon")
+        style
+            include ../css/style.css
+        style( media="only screen and (max-width: 768px)")
+            include ../css/media.css
+
+
+    body
+        header
+            img( src="/static/images/logo.png" alt="logo is not available" id="logo" onclick="goHome()")
+            ul( class="nav mediaclass flex" id="hnav")
+                li
+                    a( href="/") Home
+
+                li
+                    a( href="/latest") Latest
+
+                li
+                    a( href="/contact") Contact
+
+            button( id="signin" class="btn mediaclass" onclick="signin_try()") Login \ Join
+
+            div#hbIn
+                div( id="hamburger" onclick="menuClick(this)")
+                    div( class="hbLine" id="line1")
+                    div( class="hbLine" id="line2")
+                    div( class="hbLine" id="line3")
+
+        div.container
+            block div.content
+
+
+            div( id="sidebarIn" class="mediaclass")
+                div#sidebar
+                    ul( id="sidenav" class="nav flex")
+                        li
+                            a( href="/") Home
+
+                        li
+                            a( href="/latest") Latest
+
+                        li
+                            a( href="/contact") Contact
+    
+        footer
+            ul.nav.mediaclass.flex
+                li
+                    a( href="/") Home
+
+                li
+                    a( href="/latest") Latest
+
+                li
+                    a( href="/contact") Contact
+
+            a( id="copyright" onclick="goHome()") &copy; demosite2021-30
+
+        script
+            include ../js/script.js
+        noscript Enable javascript in your browser for best experiance.
